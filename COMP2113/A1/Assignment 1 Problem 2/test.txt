@@ -1,0 +1,4 @@
+sugar 
+Pancakes: flour, milk, sugar, butter 
+Salad: lettuce, olive oil, salt 
+Cake: flour, brown sugar, eggs

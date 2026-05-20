@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>COMP2113 Cheatsheet - Linux Shell Enhanced v2</title>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #111827;
+      font-family: "Aptos", "Segoe UI", "Arial", sans-serif;
+      font-size: 5.76pt;
+      line-height: 1.105;
+    }
+    .page {
+      width: 297mm;
+      height: 210mm;
+      margin: 0 auto 8mm;
+      padding: 3.6mm 3.9mm;
+      background: #fff;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+    .header {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4mm;
+      align-items: end;
+      border-bottom: 0.8pt solid #111827;
+      padding-bottom: 1.05mm;
+      margin-bottom: 1.25mm;
+    }
+    h1 {
+      margin: 0;
+      font-size: 12.4pt;
+      line-height: 1;
+      letter-spacing: 0;
+      color: #111827;
+      font-family: "Aptos Display", "Segoe UI Semibold", "Trebuchet MS", sans-serif;
+      font-weight: 800;
+    }
+    .meta {
+      display: none;
+      color: #4b5563;
+      font-size: 5.4pt;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .cols {
+      column-count: 4;
+      column-gap: 1.75mm;
+      column-rule: 0.18pt solid #d4d4d4;
+    }
+    .block {
+      display: inline-block;
+      width: 100%;
+      break-inside: avoid;
+      margin: 0 0 0.92mm;
+      padding: 0 0.35mm 0.28mm;
+      border: 0;
+      background: transparent;
+    }
+    .block.shell,
+    .block.cpp,
+    .block.warn { border-left-color: transparent; }
+    h2 {
+      margin: 0 0 0.32mm;
+      padding-bottom: 0.24mm;
+      border-bottom: 0.45pt solid #111827;
+      color: #111827;
+      font-size: 6.98pt;
+      line-height: 1.02;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-family: "Aptos Display", "Segoe UI Semibold", "Trebuchet MS", sans-serif;
+      font-weight: 800;
+    }
+    h3 {
+      margin: 0.35mm 0 0.2mm;
+      color: #111827;
+      font-size: 6.46pt;
+      line-height: 1;
+      letter-spacing: 0;
+      font-family: "Aptos", "Segoe UI Semibold", "Arial", sans-serif;
+      font-weight: 700;
+    }
+    p { margin: 0 0 0.25mm; }
+    ul { margin: 0; padding-left: 2.65mm; }
+    li { margin: 0 0 0.18mm; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.1mm 0 0.3mm;
+    }
+    th, td {
+      border-bottom: 0.25pt solid #e7e5e4;
+      padding: 0.16mm 0.28mm 0.12mm;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      color: #172554;
+      font-size: 5.32pt;
+      font-weight: 700;
+      background: #fff;
+    }
+    code, pre, .mono {
+      font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
+    }
+    code { font-size: 5.32pt; }
+    pre {
+      margin: 0.25mm 0 0;
+      padding: 0.42mm 0.52mm;
+      border: 0;
+      background: transparent;
+      color: #111827;
+      font-size: 4.99pt;
+      line-height: 1.035;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    pre .codepart { color: #111827; }
+    pre .comment { color: #1d4ed8; font-style: italic; }
+    .danger { color: #991b1b; font-weight: 700; }
+    .key { color: #111827; font-weight: 700; }
+    .tight pre { font-size: 4.76pt; line-height: 1.01; }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0.9mm;
+      row-gap: 0.12mm;
+    }
+    .grid2 div {
+      border-bottom: 0.2pt dotted #d6d3d1;
+      padding-bottom: 0.12mm;
+    }
+    .note {
+      color: #57534e;
+      font-size: 5.20pt;
+    }
+    .note strong { color: #991b1b; }
+    .tag {
+      display: inline-block;
+      min-width: 4.6mm;
+      color: #111827;
+      font-weight: 700;
+      font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
+      font-size: 5.52pt;
+    }
+    @media print {
+      html, body { background: #fff; }
+      .page { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="header">
+      <h1>COMP2113 Cheatsheet - Page 1: Linux Commands / Shell / Regex / Makefile / C++ Basics</h1>
+    </div>
+    <div class="cols">
+      <section class="block shell">
+        <h2>Linux Command Reference</h2>
+<pre>1. Navigation / help
+   pwd                         # print absolute current dir
+     out: /home/user/lab
+   cd dir | cd .. | cd ~ | cd / # change dir; quote spaces: cd "Module 1"
+     out: no output if OK; error if dir missing
+   ls [path]                   # list names in current/path dir
+   ls -a                       # include hidden .files
+   ls -lh                      # long format + human sizes
+     out: -rw-r--r-- 1 u staff 1.2K May 20 a.cpp
+   man ls                      # manual; /word search, n next, q quit
+
+2. Create / view / edit files
+   mkdir dir | mkdir a b        # create one/many dirs; no output if OK
+   rmdir dir                    # remove empty dir only
+   touch f                      # create empty file/update timestamp
+   cat f | cat a b              # print/concatenate file contents
+     out: hello
+   less f                       # paged view; space next page, /pat search, q quit
+   vi f | vim f | pico f        # terminal editor screen
+   head [-n N] f                # first N lines, default 10; out: line1...
+   tail [-n N] f | tail -f log  # last N lines; -f follows appended lines
+
+3. Copy / move / remove / permission
+   cp src dst | cp f dir/       # copy file; no output if OK
+   cp -r dir backup             # recursive copy directory
+   mv old new | mv f dir/       # rename or move into existing dir
+   rm f | rm -r dir | rm -rf d  # remove; -r recursive; -f no prompt/error
+   chmod u+x run.sh             # add owner execute
+   chmod 755 f                  # owner rwx, group r-x, other r-x
+
+4. Text processing
+   wc f | wc -l/-w/-c/-m f      # lines/words/bytes/chars
+     out: 3 8 42 f
+   sort f | sort -n | sort -r   # lexicographic/numeric/reverse sort
+   sort -t, -k2 data.csv        # comma delimiter, sort by field 2
+     out: sorted lines
+   cut -d, -f1,3 data.csv       # print selected fields
+     out: Alice,95
+   sort f | uniq | uniq -c      # adjacent duplicate removal/count
+     out: 3 apple
+   spell f                      # misspelt words; out: recieve
+   diff expected.txt output.txt # &lt; first file, &gt; second; out: 2c2
+
+5. Search / print / archive
+   find . -name "*.cpp" -type f # recursively print matching file paths
+     out: ./src/a.cpp
+   grep -n "pat" f              # matching lines with line no.; out: 7:hello
+   grep -E "a|b" f              # extended regex; grep -i ignores case
+   echo "$x" | echo -n text     # print text; -n suppresses final newline
+   read x | read a b            # waits for stdin, assigns words to variables
+   which g++ | which -a python  # executable path(s); out: /usr/bin/g++
+   date                         # current date/time; out: Mon May 20 ...
+   tar -czvf a.tgz *.cpp *.h    # create gzip archive; out lists added files</pre>
+        <p class="note">Options are command-specific. For example, <code>-d</code> means delimiter in <code>cut</code>, directory test in <code>[ -d file ]</code>, and delete in <code>diff</code> output notation.</p>
+      </section>
+
+      <section class="block shell">
+        <h2>Option Meaning Quick Map</h2>
+        <table>
+          <tbody>
+            <tr><td><code>-a</code></td><td><code>ls -a</code> all incl. hidden; <code>which -a</code> all paths.</td></tr>
+            <tr><td><code>-l</code></td><td><code>ls -l</code> long listing; <code>wc -l</code> line count.</td></tr>
+            <tr><td><code>-h</code></td><td><code>ls -lh</code> human-readable sizes.</td></tr>
+            <tr><td><code>-r</code></td><td><code>rm/cp -r</code> recursive; <code>sort -r</code> reverse.</td></tr>
+            <tr><td><code>-f</code></td><td><code>rm -f</code> force; <code>tail -f</code> follow; <code>cut -f</code> field.</td></tr>
+            <tr><td><code>-n</code></td><td><code>head/tail -n</code> line count; <code>sort -n</code> numeric; <code>grep -n</code> line no.; <code>echo -n</code> no newline.</td></tr>
+            <tr><td><code>-c</code></td><td><code>wc -c</code> bytes; <code>grep -c</code> count matching lines; <code>g++ -c</code> compile object only.</td></tr>
+            <tr><td><code>-w</code></td><td><code>wc -w</code> word count; <code>[ -w f ]</code> writable test.</td></tr>
+            <tr><td><code>-m</code></td><td><code>wc -m</code> character count.</td></tr>
+            <tr><td><code>-k</code></td><td><code>sort -k2</code> sort by field 2.</td></tr>
+            <tr><td><code>-t</code></td><td><code>sort -t','</code> field delimiter for sort.</td></tr>
+            <tr><td><code>-d</code></td><td><code>cut -d','</code> delimiter; <code>[ -d path ]</code> directory; <code>find -type d</code> dir.</td></tr>
+            <tr><td><code>-E</code></td><td><code>grep -E</code> extended regex: <code>+</code>, <code>?</code>, <code>|</code>, <code>{}</code>.</td></tr>
+            <tr><td><code>-P</code></td><td><code>grep -P</code> Perl-compatible regex.</td></tr>
+            <tr><td><code>-o</code></td><td><code>grep -o</code> only the matched substring; <code>g++ -o main</code> output name.</td></tr>
+            <tr><td><code>-e</code></td><td><code>[ -e f ]</code> exists.</td></tr>
+            <tr><td><code>-s</code></td><td><code>[ -s f ]</code> exists and non-empty.</td></tr>
+            <tr><td><code>-x</code></td><td><code>[ -x f ]</code> executable; <code>chmod u+x</code> add user execute.</td></tr>
+            <tr><td><code>-la</code></td><td><code>ls -la</code> long listing including hidden files.</td></tr>
+            <tr><td><code>-rf</code></td><td><code>rm -rf dir</code> recursive + force; dangerous if path is wrong.</td></tr>
+            <tr><td><code>-czvf</code></td><td><code>tar</code>: create, gzip, verbose, output filename.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="block shell tight">
+        <h2>Paths, Permissions, Files</h2>
+<pre>absolute path: /home/user/a.cpp
+relative path: ../data/input.txt
+hidden file: .bashrc
+quote spaces: cd "Module 1" or cd Module\ 1
+wildcards: * any string, ? one character
+cd . stays here; cd .. parent; cd ~ home
+
+-rwxr--r-- 1 jacob sudoer 40 Jan 1 00:00 file.cpp
+type: - file, d dir
+permission triplets: owner/group/other = rwx/r--/r--
+chmod [u/g/o/a][+/-/=][r/w/x] file
+chmod 755 run.sh  # owner rwx, group r-x, other r-x
+chmod o+w f       # others add write
+chmod a+rx f      # all add read+execute
+chmod go-rw f     # group/others remove read+write
+cp file dir/      # copy into dir
+cp -r dir backup  # recursive copy
+mv old new        # rename if destination absent
+rm -rf d          # recursive force delete
+vi/vim/pico f     # edit f in terminal</pre>
+      </section>
+
+      <section class="block shell tight">
+        <h2>Redirection and Pipes</h2>
+<pre>stdin=0 stdout=1 stderr=2
+cmd &lt; in.txt          # stdin from file
+cmd &gt; out.txt         # stdout overwrite
+cmd &gt;&gt; out.txt        # stdout append
+cmd 2&gt; err.txt        # stderr overwrite
+cmd &gt; out 2&gt; err      # split stdout/stderr
+cmd &gt; all 2&gt;&amp;1        # merge stderr into stdout destination
+cmd 1&gt;/dev/null 2&gt;&amp;1 # hide output and error
+cmd1 | cmd2           # stdout of cmd1 to stdin of cmd2
+cmd1 &amp;&amp; cmd2          # run cmd2 only if cmd1 succeeds
+cmd1 || cmd2          # run cmd2 only if cmd1 fails</pre>
+      </section>
+
+      <section class="block shell tight">
+        <h2>Pipeline Patterns</h2>
+<pre>sort voting.txt | uniq -c | sort -nr | head -2
+grep ' 404 ' access.log | cut -d' ' -f1 | sort | uniq -c
+sort -k3 -n data.txt | cut -d' ' -f2,3 &gt; result.txt
+ls -l | grep -E '^...x..x..x'
+find . -name '*.cpp' -type f | sort
+cut -d' ' -f4-8 mark.txt | ./mark &gt; result.txt
+./main &lt; input.txt &gt; output.txt
+diff expected.txt output.txt</pre>
+      </section>
+
+      <section class="block shell tight">
+        <h2>grep / Regular Expression</h2>
+<pre>grep 'hell' f             # basic pattern, case-sensitive
+grep -E '[Aa]pple' f     # extended regex
+grep -E '^apple$' f      # exact whole line
+grep -E 'a.*ge' f        # a then any chars then ge
+grep -E '(co)+' f        # group co repeated 1+ times
+grep -E '[0-9]{1,2}[A-Za-z]{3,}[0-9]{4}' f
+find . -name "hello.*" -type f
+grep -E '^.{4}$' f       # exactly 4 characters
+
+^ begin line    $ end line      . any char
+? zero/one      * zero/more     + one/more
+[abc] set       [^abc] not set  [a-z] range
+(p){n} exactly  (p){n,} at least n  (p){n,m}
+ab|cd either    \. literal dot  [a-z]* lower-case string
+\w \d \s word/digit/space</pre>
+      </section>
+
+      <section class="block shell tight">
+        <h2>Compact Regex Appendix</h2>
+<pre>^ begin line      $ end line
+. any character  \ escape special char
+? 0 or 1         * 0 or more       + 1 or more
+[abc] set        [^abc] not set    [a-zA-Z] range
+(p){n} exactly n
+(p){n,} n to infinity
+(p){n,m} n to m
+ab|cd either
+\w \W word/nonword
+\d \D digit/nondigit
+\s \S space/nonspace
+\n newline</pre>
+      </section>
+
+      <section class="block shell tight">
+        <h2>Shell Script Syntax</h2>
+<pre>#!/bin/bash
+VAR_NAME=value            # no spaces around =
+read VAR_NAME             # read stdin
+echo "$VAR_NAME"          # double quotes expand variables
+echo 'literal $VAR_NAME'  # single quotes do not expand
+cmd_out="$(cmd)"          # command substitution
+path="Module 1/a.cpp"     # double quote paths with spaces
+echo "$USER $HOME"        # expands variables, keeps spaces as one arg
+echo '$USER $HOME'        # prints literal $USER $HOME
+echo \$HOME               # backslash escapes one special char
+echo "*.cpp"              # no wildcard expansion inside quotes
+echo *.cpp                # wildcard expands to matching filenames
+cmd `date`                # old command substitution; prefer $(date)
+${#a}                     # string length
+${a:pos:len}              # substring, index starts at 0
+${a/find/replace}         # replace first occurrence
+${a//find/replace}        # replace all occurrences
+let "x = x + 1"           # arithmetic
+x=$((x + 1))              # arithmetic expansion
+echo "error" &gt;&amp;2          # output to stderr
+exit 1                    # non-zero status means failure</pre>
+      </section>
+
+      <section class="block shell tight">
+        <h2>Arguments, Tests, Control</h2>
+<pre>1. Script arguments
+   $0 script name; $1 first arg; ${10} tenth arg
+   $# arg count; $? last exit status; "$@" all args safely
+   Example: ./run.sh in.txt out.txt
+     $0=./run.sh, $1=in.txt, $2=out.txt, $#=2
+   for a in "$@"; do echo "$a"; done  # preserves spaces in args
+
+2. String tests
+   [ "$s" ]                 # non-empty string
+   [ "$a" == "$b" ]         # string equal
+   [ "$a" != "$b" ]         # string not equal
+   [ "$a" \&gt; "$b" ]         # lexicographic after; escape &gt;
+   Example: if [ "$name" == "Tom" ]; then echo match; fi
+
+3. File and integer tests
+   [ -e f ] exists; [ -f f ] regular file; [ -d p ] directory
+   [ -s f ] non-empty; [ -r f ] readable; [ -w f ] writable; [ -x f ] executable
+   [ "$a" -eq "$b" ]; -ne not equal; -lt/-le less; -gt/-ge greater
+   Example: if [ -f "$1" ] &amp;&amp; [ -r "$1" ]; then cat "$1"; fi
+
+4. if / elif / else
+   if [ cond ]; then cmd; elif [ cond2 ]; then cmd2; else cmd3; fi
+   Example: if [ "$#" -lt 2 ]; then echo "usage" &gt;&amp;2; exit 1; fi
+
+5. Loops
+   for i in $list; do cmd; done        # word-splitting happens
+   for i in "$@"; do echo "$i"; done   # safer for arguments
+   for f in *.cpp; do g++ -std=c++11 "$f" -o "${f%.cpp}"; done
+   for ((i=0; i&lt;n; i++)); do echo "$i"; done
+   for ((i=10; i&gt;=0; i-=2)); do sum=$((sum+i)); done</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Compile and Makefile</h2>
+<pre>1. Manual compile commands
+   g++ -std=c++11 -pedantic-errors -Wall main.cpp -o main
+     # compile one program; -o names executable
+   g++ -c gradebook.cpp -o gradebook.o
+     # compile only to object file, no linking yet
+   g++ main.o gradebook.o -o main
+     # link object files into executable
+   ./main &lt; in.txt &gt; out.txt
+     # run with redirected input/output
+
+2. Typical Makefile
+   CXX = g++
+   CXXFLAGS = -std=c++11 -pedantic-errors -Wall
+   OBJS = main.o gradebook.o
+
+   main: $(OBJS)
+        $(CXX) $(CXXFLAGS) $(OBJS) -o $@
+
+   %.o: %.cpp
+        $(CXX) $(CXXFLAGS) -c $&lt; -o $@
+
+   main.o: main.cpp gradebook.h
+   gradebook.o: gradebook.cpp gradebook.h
+
+   .PHONY: clean tar
+   clean:
+        rm -f *.o main
+   tar:
+        tar -czvf submit.tgz *.cpp *.h Makefile
+
+3. Makefile syntax
+   target: dependencies        # if dependency newer, rebuild target
+        recipe command         # recipe line must start with TAB
+   $@ target name; $&lt; first dependency; $^ all dependencies
+   make        # builds first target
+   make clean  # runs clean target
+   make tar    # creates submission archive
+
+4. .h files
+   Header .h: declarations, struct/class definitions, function prototypes.
+   Source .cpp: function definitions/implementation.
+   Use #include "gradebook.h" in .cpp that needs declarations.
+   Do not compile .h alone; compile .cpp that includes it.
+   If gradebook.h changes, every .o depending on it must rebuild.
+   Header guard prevents double include:
+     #ifndef GRADEBOOK_H
+     #define GRADEBOOK_H
+     ...
+     #endif</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>C++ Basics, Arrays, Strings</h2>
+<pre>#include &lt;cstdlib&gt;  # rand, srand
+#include &lt;ctime&gt;    # time
+srand(std::time(nullptr));
+rand() % (b - a + 1) + a;   # [a,b]
+
+#include &lt;cmath&gt;
+sqrt(x); pow(x,y); fabs(x); ceil(x); floor(x);
+fmod(x,y); sin(x); cos(x); tan(x); log(x); log10(x);
+
+T arr[n]; T arr[] = {1,2,3}; T arr[3][2];
+ret_type f(T arr[], int size);
+ret_type g(T arr[][2], int size);
+
+#include &lt;cctype&gt;
+isdigit(c); isalpha(c); isalnum(c); islower(c); isupper(c);
+isspace(c); isprint(c); tolower(c); toupper(c);
+
+string s = "HKU ENGG1340 CompSc";
+s.length()/s.size(); s.empty(); s[i]; s.at(i);
+s.substr(pos,len);                  # substring, len may be omitted
+s.find(str,pos=0); s.rfind(str);    # return index or string::npos
+s.insert(pos,str); s.erase(pos,len); s.replace(pos,len,str);
+s += "x"; s.compare(t);             # compare: &lt;0, 0, &gt;0
+getline(cin,s);                     # whole line, including spaces
+to_string(123);                     # number -&gt; string: "123"
+s.c_str();                          # string -&gt; const char* C-string view
+string t(cstr);                     # C-string -&gt; string copy
+
+#include &lt;cstdlib&gt;
+abs(x); atoi(cstr); atof(cstr); atol(cstr);
+time(nullptr); ctime(&amp;t); clock();</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>File I/O and Formatting</h2>
+<pre>1. Open file
+   #include &lt;fstream&gt;
+   ifstream fin("input.txt");              # read
+   ofstream fout("output.txt");            # write, overwrite
+   ofstream app("log.txt", ios::app);      # append
+   fstream fs("data.txt", ios::in | ios::out);
+   fin.open(path_str.c_str());             # C++11 accepts string too
+
+2. Check open state
+   if (!fin) { /* open failed */ }
+   if (fin.fail()) { /* previous operation failed */ }
+   fin.clear(); fin.seekg(0);              # reset state and rewind
+
+3. Read safely
+   while (fin &gt;&gt; x) { process(x); }        # token / number loop
+   while (getline(fin, line)) { ... }      # whole-line loop
+   Do not use while(!fin.eof()) as loop condition.
+
+4. Write / redirect
+   fout &lt;&lt; name &lt;&lt; ' ' &lt;&lt; score &lt;&lt; endl;  # endl also flushes
+   cerr &lt;&lt; "error\n";                      # diagnostic stream
+
+5. Close / flush
+   fout.flush(); fin.close(); fout.close();
+   File closes automatically when stream object is destroyed.
+
+6. Parse strings
+   #include &lt;sstream&gt;
+   istringstream iss("1 2 3"); iss &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+   ostringstream oss; oss &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; x;
+
+7. Formatting
+   #include &lt;iomanip&gt;
+   cout &lt;&lt; 3.1415926;                    # 3.14159, 6 significant figs
+   cout &lt;&lt; fixed &lt;&lt; setprecision(2) &lt;&lt; 3.1; # 3.10
+   cout &lt;&lt; scientific &lt;&lt; setprecision(2) &lt;&lt; 1234.0; # 1.23e+03
+   cout &lt;&lt; showpoint &lt;&lt; 3.0;             # 3.00000
+   cout &lt;&lt; noshowpoint &lt;&lt; 3.0;           # 3
+   cout.unsetf(ios_base::floatfield);      # back to default float
+   cout &lt;&lt; setw(5) &lt;&lt; 42;                # "   42", next item only
+   cout &lt;&lt; setfill('*') &lt;&lt; setw(5) &lt;&lt; 42; # "***42", fill persists
+   cout &lt;&lt; left &lt;&lt; setw(5) &lt;&lt; 42;        # "42***" if fill is '*'
+   cout &lt;&lt; boolalpha &lt;&lt; true;            # true; noboolalpha gives 1</pre>
+      </section>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="header">
+      <h1>COMP2113 Cheatsheet - Page 2: Pointers / Linked Lists / STL Containers / C Language</h1>
+    </div>
+    <div class="cols">
+      <section class="block cpp tight">
+        <h2>Pointers and Dynamic Memory</h2>
+<pre>int val = 5;
+int *p = &amp;val;     # p points to val
+int *a, b;         # a is pointer; b is int
+cout &lt;&lt; *p;        # value
+cout &lt;&lt; p;         # address of val
+cout &lt;&lt; &amp;p;        # address of pointer
+p = nullptr;       # points to nothing
+if (p != nullptr) cout &lt;&lt; *p;  # check before dereference
+
+int *q = new int; *q = 5; delete q; q = nullptr;
+int *arr = new int[n]; delete[] arr; arr = nullptr;
+*p++;              # increments pointer
+(*p)++;            # increments pointed value
+a[i] == *(a+i); &amp;a[i] == a+i;
+new pairs with delete; new[] pairs with delete[].</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>C++ Core Syntax</h2>
+<pre>Compile: g++ -pedantic-errors -std=c++11 a.cpp -o a
+main() starts execution; return 0 means success.
+Identifier starts with letter/_; then letter/digit/_; case-sensitive.
+Types: char, bool, int, double. Uninitialized values are unknown.
+cout &lt;&lt; x &lt;&lt; endl; cin &gt;&gt; x;  // &gt;&gt; stops at whitespace
+
+if (cond) stmt; else stmt2;
+switch (x) { case v: ...; break; default: ...; }
+while (cond) { ... }   for (init; cond; update) { ... }
+break exits loop/switch; continue jumps to next iteration.
+Operators: + - * / %, &lt; &lt;= &gt; &gt;= == !=, &amp;&amp; || !, = += -=.
+Conditional expression: ans = (a &gt; b) ? a : b;</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Reference vs Pointer Swap</h2>
+<pre>void swapByRef(int&amp; a, int&amp; b) {
+  int t = a; a = b; b = t;
+}
+
+void swapByPtr(int *a, int *b) {
+  int t = *a; *a = *b; *b = t;
+}
+
+Call pointer version: swapByPtr(&amp;x, &amp;y);
+Reference is an alias and cannot be reseated.
+Pointer stores an address, may be nullptr, can point elsewhere.</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Pointer Patterns</h2>
+<pre>Array as pointer:
+int a[10]; int *p = a; p[i] == *(p+i);
+Passing array: void fill(int a[], int n);  # array modified in caller
+
+Struct pointer:
+struct Student { char name[100]; int uid; };
+Student s; Student *sp = &amp;s;
+(*sp).uid = 1; sp-&gt;uid = 1;   # arrow is shorthand
+strcpy(sp-&gt;name, "Tim");      # cannot assign char array by =
+
+C dynamic memory:
+int *p = malloc(n * sizeof *p);
+if (!p) exit(1);
+free(p); p = nullptr;
+malloc/calloc/realloc return void*; C auto-converts, C++ needs cast/new.</pre>
+      </section>
+
+      <section class="block warn tight">
+        <h2>Pointer Pitfalls</h2>
+<pre>Dangling pointer: pointer still stores freed/deleted address.
+Memory leak: allocated memory is no longer reachable.
+Double free/delete: releasing same allocation twice is undefined.
+Wrong deallocation pair: new[] must use delete[], malloc must use free.
+Off-by-one: last valid index is n-1; a+n points one past last only.
+Never dereference one-past-last, nullptr, or an uninitialized pointer.
+
+Dynamic array resize pattern:
+T *b = new T[newSize];
+copy old items; delete[] a; a = b; b = nullptr;</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Linked List Pointer Rules</h2>
+<pre>Use cur for traversal; do not move head unless deleting/changing head.
+while (cur != nullptr) { process(cur); cur = cur-&gt;next; }
+For deletion keep prev:
+if (prev == nullptr) head = cur-&gt;next; else prev-&gt;next = cur-&gt;next;
+delete old node after saving next pointer.
+
+head insert: n-&gt;next = head; head = n;
+tail insert: if empty head=tail=n; else tail-&gt;next=n; tail=n;
+Sequential access: kth node needs walking from head, O(k).
+Array random access O(1); linked-list insert/delete after node O(1).</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Functions, Scope, Passing</h2>
+<pre>ret_type f(type1 p1, type2 p2) { statements; return value; }
+void f(...) { statements; return; }  // return optional in void
+Function call is an expression: z = larger(2.5, larger(a,b));
+Prototype before use: double larger(double, double);
+
+Local vars: inside block/function; disappear after block exits.
+Global vars: outside functions; visible after declaration, avoid for data flow.
+Inner block variable hides same-name outer variable.
+
+Pass by value: void f(int x)   // copy, caller unchanged
+Pass by ref:   void f(int&amp; x)  // C++ alias, caller changed
+Pass pointer:  void f(int *p)  // C/C++, call f(&amp;x), use *p</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Linear Search / Selection Sort</h2>
+<pre>int linSearch(T a[], int n, T x) {
+  for (int i = 0; i &lt; n; ++i)
+    if (a[i] == x) return i;
+  return -1;
+}
+
+void selSortAsc(T a[], int n) {
+  for (int i = 0; i &lt; n - 1; ++i) {
+    int m = i;
+    for (int j = i + 1; j &lt; n; ++j)
+      if (a[j] &lt; a[m]) m = j;
+    if (m != i) { T t = a[i]; a[i] = a[m]; a[m] = t; }
+  }
+}</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Linked List Basics</h2>
+<pre>struct Node { int data; Node* next; };
+Node* head = nullptr;
+Node* n = new Node;
+n-&gt;data = 10; n-&gt;next = nullptr; head = n;
+
+Node* cur = head;
+while (cur != nullptr) {
+  doSomething();
+  cur = cur-&gt;next;
+}
+
+void insertAtFront(Node*&amp; head, Node* n) {
+  n-&gt;next = head;
+  head = n;
+}</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Linked List Insert / Delete</h2>
+<pre>void insertAtEnd(Node*&amp; head, Node* n) {
+  Node* cur = head;
+  if (cur == nullptr) { head = n; return; }
+  while (cur-&gt;next != nullptr) cur = cur-&gt;next;
+  cur-&gt;next = n; n-&gt;next = nullptr;
+}
+
+void deleteWithVal(Node*&amp; head, int val) {
+  Node *cur = head, *prev = nullptr;
+  while (cur != nullptr) {
+    if (cur-&gt;data == val) {
+      if (prev == nullptr) head = cur-&gt;next;
+      else prev-&gt;next = cur-&gt;next;
+      delete cur;
+      cur = prev ? prev-&gt;next : head;
+      continue;   # delete all occurrences
+    }
+    prev = cur; cur = cur-&gt;next;
+  }
+}</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Linked List Clear / Reverse</h2>
+<pre>void deleteList(Node*&amp; head) {
+  Node *cur = head, *next;
+  while (cur != nullptr) {
+    next = cur-&gt;next;
+    delete cur;
+    cur = next;
+  }
+  head = nullptr;
+}
+
+void reverseList(Node*&amp; head) {
+  Node *cur = head, *prev = nullptr, *next;
+  while (cur != nullptr) {
+    next = cur-&gt;next;
+    cur-&gt;next = prev;
+    prev = cur;
+    cur = next;
+  }
+  head = prev;
+}</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>struct in C++</h2>
+<pre>struct Point {
+  int x, y, z;
+  Point(int x, int y, int z) : x(x), y(y), z(z) {}
+  double distance(const Point&amp; p) {
+    return sqrt(pow(x-p.x,2)+pow(y-p.y,2)+pow(z-p.z,2));
+  }
+  bool operator&lt;(const Point&amp; p) {
+    return x &lt; p.x || (x == p.x &amp;&amp; y &lt; p.y) ||
+           (x == p.x &amp;&amp; y == p.y &amp;&amp; z &lt; p.z);
+  }
+};
+Point p1(1,2,3), p2(4,5,6);
+double dist = p1.distance(p2);</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>STL Iterators</h2>
+<pre>STL = containers + iterators + algorithms.
+Iterator belongs to one container type; do not mix vector/list/map iterators.
+
+vector&lt;int&gt;::iterator it = v.begin();
+cout &lt;&lt; *it; *it = 100; ++it;          # dereference changes item
+c.begin() points first item; c.end() points one past last, not a real item.
+Never dereference end(); use it != c.end() as loop condition.
+
+Forward:       =, ++, *, ==, !=
+Bidirectional: forward + --            # list/map/set
+Random access: bidirectional + +, -, +=, &lt;, it[i]  # vector/array
+For vector, v.end()-v.begin() == v.size(); for list/map/set this is invalid.
+Iterator is not necessarily a memory address; it hides container structure.</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Recursion Patterns</h2>
+<pre>Recursive function = base case + recursive call on smaller input.
+Must eventually reach base case; otherwise stack overflow.
+
+int fact(int n) { if (n == 0) return 1; return n * fact(n-1); }
+int fib(int n) { if (n &lt; 2) return n; return fib(n-1)+fib(n-2); }
+int gcd(int x, int y) { if (y == 0) return x; return gcd(y,x%y); }
+bool pal(string s) {
+  return s.length() &lt; 2 ||
+    (s[0] == s[s.length()-1] &amp;&amp; pal(s.substr(1,s.length()-2)));
+}</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>vector / list / set / map</h2>
+<pre>#include &lt;vector&gt;
+vector&lt;int&gt; v;
+v.push_back(x); v.pop_back(); v[i]; v.at(i); v.size(); v.empty();
+v.front(); v.back(); v.capacity(); v.resize(n); v.reserve(n);
+v.insert(pos,val); v.erase(pos); v.clear(); v.swap(v2);
+push_back/pop_back/index/size are O(1); push_back copies the item.
+Pros: random access O(1), compact memory, works with std::sort.
+Cons: middle insert/erase costly; reallocation may invalidate iterators.
+Use vector when random access and sorting are needed.
+for (vector&lt;T&gt;::iterator it = v.begin(); it != v.end(); ++it)
+  cout &lt;&lt; *it;
+for (auto it = v.begin(); it != v.end(); )
+  if (condition) it = v.erase(it); else ++it;
+
+#include &lt;list&gt;
+list&lt;int&gt; l;
+l.push_back(1); l.push_front(2);
+l.pop_back(); l.pop_front(); l.size(); l.front(); l.back();
+l.sort(); l.reverse();                 # list member sort/reverse
+list&lt;T&gt;::iterator it;  # bidirectional, no l[i], no random access
+Pros: O(1) insert/erase at known position; stable iterators.
+Cons: no index/random access; extra pointer memory; cannot std::sort.
+Use list for frequent insertion/deletion, not kth-item access.
+
+#include &lt;set&gt;
+set&lt;int&gt; s;
+s.insert(3); s.insert(3);              # duplicate ignored
+s.count(3); s.find(3); s.erase(3); s.size(); s.empty();
+for (auto it = s.begin(); it != s.end(); ++it) cout &lt;&lt; *it;
+Set stores unique keys in sorted order; key type needs operator&lt;.
+Default order is ascending; rbegin/rend visits reverse order.
+Pros: unique + sorted + O(log n) find/insert/erase.
+Cons: no duplicates, no index access, cannot modify key through iterator.
+
+#include &lt;map&gt;
+map&lt;string,int&gt; m;
+m["Alan"] = 90;                        # insert/update value by key
+m.count("Alan"); m.find("Alan"); m.erase("Alan"); m.size();
+for (auto it = m.begin(); it != m.end(); ++it)
+  cout &lt;&lt; it-&gt;first &lt;&lt; it-&gt;second;     # ascending key order
+m[key] creates default value if key absent; use count/find to test first.
+map keeps keys sorted; begin() gives smallest key.
+Pros: key-value lookup/update O(log n), sorted by key.
+Cons: no duplicate keys; m[key] inserts default if absent.
+v1 = v2; l1 = l2; m1 = m2;             # assignment copies elements</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>STL Algorithms / Sort Details</h2>
+<pre>#include &lt;algorithm&gt;
+sort(v.begin(), v.end());              # default ascending by operator&lt;
+sort(v.begin()+1, v.end()-1);          # [first,last), last not included
+sort(a, a+n);                          # array pointers act as iterators
+sort(v.rbegin(), v.rend());            # descending via reverse iterators
+sort(v.begin(), v.end(), greater&lt;int&gt;()); # descending comparator
+reverse(v.begin(), v.end());           # reverse current order, no sorting
+std::find(v.begin(), v.end(), x);      # linear search, returns iterator/end
+
+Do not call std::sort on list/map/set iterators; they are not random access.
+Use l.sort() for list sorting; l.reverse() reverses list order.
+map/set are already sorted by key; iteration visits ascending keys.
+Use rbegin()/rend() to visit vector/list/set/map in reverse order.
+For user-defined keys/items used in set/map/sort, define operator&lt;:
+bool operator&lt;(const Email&amp; a, const Email&amp; b) {
+  if (a.sender != b.sender) return a.sender &lt; b.sender;
+  return a.subject &lt; b.subject;
+}
+
+Complexity: vector random access O(1); list kth access O(k);
+map/set insert/find/erase O(log n); sort average O(n log n).
+
+int binSearch(int a[], int l, int r, int x) {
+  if (r &gt;= l) {
+    int m = l + (r-l)/2;
+    if (a[m] == x) return m;
+    if (a[m] &gt; x) return binSearch(a,l,m-1,x);
+    return binSearch(a,m+1,r,x);
+  }
+  return -1;
+}</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>C Language</h2>
+<pre>#include &lt;stdio.h&gt;
+int a; char s[100], line[100];
+scanf("%d", &amp;a); scanf("%99s", s);     # width prevents overflow
+printf("a = %d\n", a);
+fgets(line, sizeof line, stdin);        # reads spaces, nullptr if fail
+line[strcspn(line,"\n")] = '\0';        # remove trailing newline
+
+%d int       %f/%lf float/double
+%.nf n decimals    %g no trailing 0
+%c char      %(n)s width n string
+sprintf(buf,"%d",x); sscanf(str,"%d",&amp;x);
+remove("a.txt"); rename("old","new");
+
+#include &lt;string.h&gt;
+strcpy(s1,s2); strcat(s1,s2); strcmp(s1,s2); strlen(s);
+strchr(s,ch); strrchr(s,ch); strstr(s,sub); strtok(s,delim);
+strncpy/strncat need manual '\0' check if buffer may fill.
+
+#include &lt;stdlib.h&gt;
+void *malloc(size_t size);              # uninitialized bytes
+void *calloc(size_t n, size_t size);    # zero-initialized n items
+void *realloc(void *p, size_t newsize); # may move allocation
+void free(void *p);                     # freeing empty pointer is safe
+int *p = malloc(n * sizeof *p);         # C: no cast needed
+if (!p) exit(1);
+free(p); p = nullptr;                  # avoid dangling pointer
+
+int *q = calloc(n, sizeof *q);          # all elements start as 0
+int *tmp = realloc(p, newN * sizeof *p);
+if (tmp != nullptr) p = tmp;            # keep old p if realloc fails
+realloc(nullptr, size) == malloc(size); realloc(p,0) is free-like.
+
+struct point { int x, y; };
+typedef struct point Point;
+# C structs cannot have member functions/constructors.
+#include &lt;limits.h&gt;  INT_MAX INT_MIN CHAR_BIT ULONG_MAX
+Compile C math library: gcc file.c -o file -lm</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>C vs C++ Differences</h2>
+<pre>1. Language/library
+   C has no cin/cout, string, vector, reference &, new/delete, class methods.
+   Use printf/scanf/fgets, char arrays, malloc/free, struct + functions.
+2. Functions and arrays
+   C function must be declared before use; no default pass-by-reference.
+   Array parameter becomes pointer: void f(int a[]) == void f(int *a).
+   sizeof(array) works only in same scope; in function it is pointer size.
+3. Memory and strings
+   void* from malloc auto-converts in C; C++ requires cast or use new.
+   char array cannot use = after declaration; use strcpy/strncpy.
+4. Input traps
+   scanf("%s", s) no & for char array; scanf("%d", &amp;x) needs address.
+   Mixing scanf then fgets leaves newline; consume newline first.
+5. Safety
+   Check every allocation and file open before dereference/use.</pre>
+      </section>
+
+      <section class="block cpp tight">
+        <h2>Char Array / C-String</h2>
+<pre>char name[] = "John";       # auto size incl. '\0'
+char name[16] = "John";     # fixed buffer
+name[i] accesses one char; name[2] = 'a';
+cin &gt;&gt; name; scanf("%15s", name); # no spaces, no &amp; for char array
+cout &lt;&lt; name; printf("%s", name);
+
+C-string ends with '\0'; ensure enough space for terminator.
+strlen(s): count chars before '\0', not including terminator.
+strcpy(dest, src): copy src incl. '\0'; dest must be large enough.
+strncpy(dest,src,n): may omit '\0' if full; check terminator manually.
+strcat(dest, src): append src; dest must have remaining capacity.
+strcmp(a,b): &lt;0 if a&lt;b, 0 equal, &gt;0 if a&gt;b; do not use ==.
+strchr(s,c): first char c; strrchr(s,c): last char c.
+strstr(s,sub): first substring; returns pointer/nullptr.
+strtok(s,delim): tokenizes by writing '\0' into s; destroys original.
+
+Must use / need C-string when:
+1. C library API: printf/scanf/fgets/strlen/strcpy/strcmp.
+2. char buffer required: char a[100], fixed memory, manual '\0'.
+3. argv and legacy APIs; older file open may need path.c_str().
+Conversions:
+string s = "abc"; const char *p = s.c_str();  # valid while s unchanged
+char buf[20]; strcpy(buf, s.c_str());         # string -&gt; writable char[]
+string t(buf); int x = stoi(t); string u = to_string(123);
+Manual upper to lower:
+if ('A' &lt;= c &amp;&amp; c &lt;= 'Z') c = c + ('a' - 'A');</pre>
+      </section>
+
+      <section class="block warn tight">
+        <h2>Exam Pitfalls</h2>
+<pre>1. Input
+   cin &gt;&gt; s stops at whitespace; getline(cin,s) reads line.
+   scanf("%s",s) may overflow unless width is given: "%99s".
+   After scanf, fgets may read leftover '\n'; consume or handle newline.
+2. Pointers / memory
+   int *a, b; means only a is pointer; write int *a, *b for two pointers.
+   Never dereference nullptr/uninitialized/one-past-end pointer.
+   new[] pairs with delete[]; malloc/calloc/realloc pairs with free.
+   Do not assign realloc result directly to p before checking nullptr.
+3. Arrays / strings
+   sizeof(array) inside function is pointer size, not element count.
+   char array cannot be compared/assigned by == or =; use strcmp/strcpy.
+   Last valid array index is size-1; loop condition usually i &lt; size.
+4. STL / algorithms
+   m[key] creates default value; use count() to test existence.
+   sort uses half-open range [first,last); last iterator not included.
+5. Testing / output
+   Test empty, one item, duplicates, max size, no match, all same.
+   Use diff to catch invisible spaces, missing newline, and line breaks.
+   Use long long for large counts/totals; watch int division truncation.</pre>
+      </section>
+
+    </div>
+  </section>
+  <script>
+    (() => {
+      const escapeHtml = (text) => text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      const important = [
+        "Never", "Do not", "nullptr", "uninitialized",
+        "realloc", "malloc", "calloc", "free", "delete[]", "delete",
+        "overflow", "dangling", "leak", "size-1", "width"
+      ];
+      const markImportant = (html) => {
+        let out = html;
+        for (const word of important) {
+          const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          out = out.replace(new RegExp(`\\b(${escaped})\\b`, "g"), '<span class="danger">$1</span>');
+        }
+        return out;
+      };
+      const findLineComment = (line, token) => {
+        let inSingle = false;
+        let inDouble = false;
+        for (let i = 0; i <= line.length - token.length; i++) {
+          const ch = line[i];
+          const prev = i > 0 ? line[i - 1] : "";
+          if (ch === "'" && !inDouble && prev !== "\\") inSingle = !inSingle;
+          if (ch === '"' && !inSingle && prev !== "\\") inDouble = !inDouble;
+          if (inSingle || inDouble) continue;
+          if (line.slice(i, i + token.length) !== token) continue;
+          if (token === "#") {
+            const directive = line.match(/^\s*#(include|define|!)/);
+            if (directive && i === line.search(/\S/)) continue;
+          }
+          if (i > 0 && /\s/.test(line[i - 1])) return i;
+        }
+        return -1;
+      };
+      const splitComment = (line) => {
+        const slash = findLineComment(line, "//");
+        const hash = findLineComment(line, "#");
+        const candidates = [slash, hash].filter((idx) => idx >= 0);
+        if (candidates.length === 0) return [line, ""];
+        const idx = Math.min(...candidates);
+        return [line.slice(0, idx), line.slice(idx)];
+      };
+      document.querySelectorAll("pre").forEach((pre) => {
+        const html = pre.textContent.split("\n").map((line) => {
+          const [code, comment] = splitComment(line);
+          return `<span class="codepart">${markImportant(escapeHtml(code))}</span>` +
+            (comment ? `<span class="comment">${escapeHtml(comment)}</span>` : "");
+        }).join("\n");
+        pre.innerHTML = html;
+      });
+    })();
+  </script>
+</body>
+</html>
